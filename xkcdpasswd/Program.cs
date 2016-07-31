@@ -7,12 +7,18 @@ namespace xkcdpasswd
     {
         public static void Main(string[] args)
         {
-            string arg1 = "4";  // default # of words
+            int numWords = 4;  // default # of words
+            int numChoices = Dictionary.EN.Length;
+            double Entropy = 0;
+            bool doEntropy = false;
+
             if (args.Length > 0)
-                arg1 = args[0];            
+                numWords = int.Parse(args[0]);
+
+            if (args.Length > 1) 
+                doEntropy = true;
 
             string sep = "-";
-            int numWords = int.Parse(arg1);
             int i = 0;
             bool alt = true;
             StringBuilder sb = new StringBuilder();
@@ -36,7 +42,27 @@ namespace xkcdpasswd
                 alt = !alt;
             } while (i < numWords);
 
-            Console.WriteLine(sb.ToString());
-        }        
+            var newpass = sb.ToString();
+            var rs = newpass;
+            if (doEntropy)
+            {
+                Entropy = CalcEntropy(numChoices, numWords);
+                var howlong = CalcYears(Entropy, 1000);
+                rs = $"Entropy for a password generated with {numWords} words will have\napproximately {Entropy:0.0} bits of Entropy\nand will take {howlong:##,###} years to guess";
+            }
+
+            Console.WriteLine(rs);
+        }
+        
+        public static double CalcEntropy(double numWords, double numChoices)
+        {
+            return Math.Log(Math.Pow(numWords, numChoices), 2);
+        }
+        public static double CalcYears(double entropy, double guessesPerSecond)
+        {
+            double howlong = Math.Pow(2, entropy) / guessesPerSecond / 60 / 60 / 24 / 364.25;
+            return howlong;
+
+        }
     }
 }
