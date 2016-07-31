@@ -1,0 +1,14 @@
+﻿{
+  "version": "1.0.0-*",
+"buildOptions": {
+    "debugType": "portable",
+    "emitEntryPoint": true
+  },
+  "runtimes": {
+    "win10-x64": {},
+    "ubuntu.14.04-x64":{}
+  },
+   "frameworks": {
+   "netstandard1.6": { }
+ }
+}
